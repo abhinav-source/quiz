@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Interactive Quiz Game</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            text-align: center;
+        }
+
+        #quiz-container {
+            max-width: 600px;
+            margin: 50px auto;
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        #question-container, #options-container, #feedback-container, #score-container {
+            margin-bottom: 20px;
+        }
+
+        button {
+            padding: 10px;
+            background-color: #4caf50;
+            color: white;
+            border: 10px;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #45a049;
+        }
+    </style>
+</head>
+<body>
+    <div id="quiz-container">
+        <div id="question-container">
+            <p id="question"></p>
+        </div>
+        <div id="options-container" class="hidden">
+            
+        </div>
+        <div id="feedback-container" class="hidden">
+            <p id="feedback"></p>
+        </div>
+        <div id="score-container" class="hidden">
+            <p>Your Score: <span id="score">0</span></p>
+        </div>
+        <button id="next-btn" class="hidden" onclick="nextQuestion()">Next Question</button>
+    </div>
+    <script>
+        const quizData = [
+            {
+                question: "What is the capital of India?",
+                options: ["Berlin", "Madrid", "Delhi", "Rome"],
+                correctAnswer: "Delhi"
+            },
+            {
+                question: "Which planet is known as the Red Planet?",
+                options: ["Venus", "Mars", "Jupiter", "Saturn"],
+                correctAnswer: "Mars"
+            },
+            
+        ];
+
+        let currentQuestion = 0;
+        let score = 0;
+
+        function startQuiz() {
+            document.getElementById("question-container").classList.remove("hidden");
+            document.getElementById("options-container").classList.remove("hidden");
+            document.getElementById("next-btn").classList.remove("hidden");
+
+            showQuestion();
+        }
+
+        function showQuestion() {
+            const questionElement = document.getElementById("question");
+            const optionsContainer = document.getElementById("options-container");
+            const currentQuizData = quizData[currentQuestion];
+
+            questionElement.textContent = currentQuizData.question;
+            optionsContainer.innerHTML = "";
+
+            currentQuizData.options.forEach((option, index) => {
+                const button = document.createElement("button");
+                button.textContent = option;
+                button.addEventListener("click", () => checkAnswer(option));
+                optionsContainer.appendChild(button);
+            });
+        }
+
+        function checkAnswer(answer) {
+            const currentQuizData = quizData[currentQuestion];
+
+            if (answer === currentQuizData.correctAnswer) {
+                score++;
+                document.getElementById("feedback").textContent = "Correct!";
+            } else {
+                document.getElementById("feedback").textContent = "Incorrect.";
+            }
+
+            document.getElementById("score").textContent = score;
+            document.getElementById("feedback-container").classList.remove("hidden");
+            document.getElementById("next-btn").classList.remove("hidden");
+        }
+
+        function nextQuestion() {
+            document.getElementById("feedback-container").classList.add("hidden");
+            document.getElementById("next-btn").classList.add("hidden");
+
+            currentQuestion++;
+
+            if (currentQuestion < quizData.length) {
+                showQuestion();
+            } else {
+                endQuiz();
+            }
+        }
+
+        function endQuiz() {
+            document.getElementById("question-container").classList.add("hidden");
+            document.getElementById("options-container").classList.add("hidden");
+
+            document.getElementById("score-container").classList.remove("hidden");
+            document.getElementById("score").textContent = score;
+        }
+
+      
+        document.addEventListener("DOMContentLoaded", startQuiz);
+    </script>
+</body>
+</html>
